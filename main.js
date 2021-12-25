@@ -2,12 +2,24 @@
 // - Generate a feasible solution (as described in slides from 8 to 15) based on indirect encoding, and
 // - Mutate an indirect encoded timetable (as described in slides 16 and 17)
 
+// PARAMETERS
 const numberOfExams = 8;
+const exams = Array.from({length: numberOfExams}, (_, i) => i + 1)
 const numberOfSlots = 16;
-const examsWithSameStudents = [[1, 2], [4, 5, 8], [6, 4, 1]]
-const encoding = [4, 5, 13, 1, 1, 4, 13, 2];
+const examsWithSameStudents = [[1, 2], [4, 5, 8], [6, 4, 1]];
+const sameStudentsExam = {};
+examsWithSameStudents.forEach((exams) => {
+    exams.forEach((exam) => sameStudentsExam[exam] = exams);
+});
 
-const mutate = (encoding) => {
+let encoding = [4, 5, 13, 1, 1, 4, 13, 2];
+
+// FUNCTIONS
+const newEncoding = () => {
+    return Array.from({length: numberOfExams}, () => Math.floor(Math.random() * numberOfSlots));
+};
+
+const mutateEncoding = (encoding) => {
     return encoding;
 };
 
@@ -15,4 +27,4 @@ const solution = encoding.map((assignment) => {
   return assignment;
 });
 
-console.log(solution)
+console.log(newEncoding());
