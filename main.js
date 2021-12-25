@@ -20,11 +20,19 @@ const newEncoding = () => {
 };
 
 const mutateEncoding = (encoding) => {
-    return encoding;
+    const _encoding = [...encoding];
+    const newValue = Math.floor(Math.random() * numberOfSlots);
+    const position = Math.floor(Math.random() * numberOfExams);
+    _encoding[position] = newValue;
+    return _encoding;
 };
 
-const solution = encoding.map((assignment) => {
-  return assignment;
-});
+const newSolution = (encoding) => {
+    encoding.map((assignment) => {
+      return assignment;
+    });
+};
 
-console.log(newEncoding());
+encoding = newEncoding();
+
+console.log(encoding, mutateEncoding(encoding), mutateEncoding(encoding), mutateEncoding(encoding));
