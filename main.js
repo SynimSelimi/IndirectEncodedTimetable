@@ -1,7 +1,3 @@
-// Make an indirect representation of the examination timetabling problem from the slides. Implement the following two functions:
-// - Generate a feasible solution (as described in slides from 8 to 15) based on indirect encoding, and
-// - Mutate an indirect encoded timetable (as described in slides 16 and 17)
-
 // PARAMETERS
 const numberOfExams = 8;
 const exams = Array.from({length: numberOfExams}, (_, i) => i + 1)
