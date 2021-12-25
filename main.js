@@ -7,10 +7,11 @@ const numberOfExams = 8;
 const exams = Array.from({length: numberOfExams}, (_, i) => i + 1)
 const numberOfSlots = 16;
 const slotsPerDay = 4;
-const sameStudentsExam = {};
 let encoding = [4, 5, 13, 1, 1, 4, 13, 2];
+let mutatedEncoding = [4, 5, 13, 9, 1, 4, 13, 2];
 
 // CLASHES
+const sameStudentsExam = {};
 const examsWithSameStudents = [[1, 2], [4, 5, 8], [6, 4, 1]];
 examsWithSameStudents.forEach((exams) => {
     exams.forEach((exam) => {
@@ -36,35 +37,59 @@ const mutateEncoding = (encoding) => {
 
 const noClasesh = (exam, scheduledExams) => {
     const clashes = sameStudentsExam[exam];
-    if (!clashes) return true;
+    if (!clashes || clashes.length === 0) return true;
+    if (!scheduledExams || scheduledExams.length === 0) return true;
 
-    const assignments = scheduledExams.flatMap((sched) => sameStudentsExam[sched.split('E')[1]]);
-    return !clashes.some((clash) => assignments.includes(clash));
+    return !scheduledExams.some((sched) => clashes.includes(sched));
 };
 
 const newSolution = (encoding) => {
+    var totalAssignments = 0;
     const solution = Array.from(Array(numberOfSlots), () => []);
     encoding.forEach((assignment, index) => {
         const exam = index + 1;
-        var countAssignment = 0;
+        var countAssignment = 1;
         
         for (var i = 0; i < numberOfSlots; i++ ) {
             const hasNoClash = noClasesh(exam, solution[i]);
-            if (countAssignment === assignment) {
-                solution[i].push(`E${exam}`);
+            if (hasNoClash && countAssignment === assignment) {
+                solution[i].push(exam);
+                totalAssignments++;
                 break;
             } else if (hasNoClash) {
                 countAssignment++;
-            } else {
-                countAssignment = 0;
             }
         }
     });
+
+    const valid = totalAssignments === encoding.length;
+    return [valid, solution];
+};
+
+const trySolving = (encoding = null) => {
+    while (true) {
+        const _encoding = encoding || newEncoding();
+        const [valid, solution]  = newSolution(_encoding);
+        if (valid) return solution;
+    }
+
     return solution;
 };
 
+const tryMutating = (encoding) => {
+    while (true) {
+        const _encoding = mutateEncoding(encoding);
+        const [valid, solution]  = newSolution(_encoding);
+        if (valid) return solution;
+    }
+};
+
 // MAIN
-// encoding = newEncoding();
-// console.log(encoding, mutateEncoding(encoding), mutateEncoding(encoding), mutateEncoding(encoding));
-const solution = newSolution(encoding);
-console.log(solution);
+const solution = trySolving(encoding);
+console.log("Feasible solution reached", solution);
+
+const mutatedSolution = trySolving(mutatedEncoding);
+console.log("Mutated solution reached", mutatedSolution);
+
+const genMutatedSolution = tryMutating(encoding);
+console.log("Generated mutation solution reached", genMutatedSolution);
